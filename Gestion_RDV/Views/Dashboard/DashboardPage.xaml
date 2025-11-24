@@ -3,102 +3,313 @@
     x:Class="Gestion_RDV.Views.Dashboard.DashboardPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:viewModels="clr-namespace:Gestion_RDV.ViewModels.Dashboard"
-    Title="Tableau de Bord">
+    xmlns:vm="clr-namespace:Gestion_RDV.ViewModels.Dashboard"
+    Title="Tableau de Bord"
+    BackgroundColor="#0F172A">
 
-    <ContentPage.BindingContext>
-        <viewModels:DashboardViewModel />
-    </ContentPage.BindingContext>
+    <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsBusy}">
+        <ScrollView>
+            <VerticalStackLayout Padding="20" Spacing="20">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15">
+                <!-- En-tête -->
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Tableau de Bord"
+                           FontSize="28"
+                           FontAttributes="Bold"
+                           TextColor="White" />
+                    <Label Text="Vue d'ensemble du cabinet médical"
+                           FontSize="14"
+                           TextColor="#94A3B8" />
+                </VerticalStackLayout>
 
-            <Label Text="Tableau de Bord"
-                   FontSize="26"
-                   FontAttributes="Bold" />
+                <!-- Statistiques - 4 Cartes -->
+                <Grid ColumnDefinitions="*,*,*,*"
+                      ColumnSpacing="15">
 
-            <Grid ColumnDefinitions="*,*,*,*"
-                  RowDefinitions="Auto"
-                  ColumnSpacing="10">
+                    <!-- Total Patients -->
+                    <Frame Grid.Column="0"
+                           BackgroundColor="#1E293B"
+                           BorderColor="Transparent"
+                           CornerRadius="15"
+                           HasShadow="False"
+                           Padding="20">
+                        <VerticalStackLayout Spacing="10">
+                            <Label FontFamily="SegoeMDL2Assets"
+                                   FontSize="30"
+                                   Text="&#xE716;"
+                                   TextColor="#60A5FA"
+                                   HorizontalOptions="Start" />
+                            <Label Text="Total Patients"
+                                   FontSize="12"
+                                   TextColor="#94A3B8" />
+                            <Label Text="{Binding TotalPatients}"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   TextColor="#60A5FA" />
+                        </VerticalStackLayout>
+                    </Frame>
 
-                <Frame BackgroundColor="#2196F3" CornerRadius="12">
-                    <VerticalStackLayout>
-                        <Label Text="Total Patients" 
+                    <!-- Total Médecins -->
+                    <Frame Grid.Column="1"
+                           BackgroundColor="#1E293B"
+                           BorderColor="Transparent"
+                           CornerRadius="15"
+                           HasShadow="False"
+                           Padding="20">
+                        <VerticalStackLayout Spacing="10">
+                            <Label FontFamily="SegoeMDL2Assets"
+                                   FontSize="30"
+                                   Text="&#xE77B;"
+                                   TextColor="#A78BFA"
+                                   HorizontalOptions="Start" />
+                            <Label Text="Total Médecins"
+                                   FontSize="12"
+                                   TextColor="#94A3B8" />
+                            <Label Text="{Binding TotalMedecins}"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   TextColor="#A78BFA" />
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- RDV Aujourd'hui -->
+                    <Frame Grid.Column="2"
+                           BackgroundColor="#1E293B"
+                           BorderColor="Transparent"
+                           CornerRadius="15"
+                           HasShadow="False"
+                           Padding="20">
+                        <VerticalStackLayout Spacing="10">
+                            <Label FontFamily="SegoeMDL2Assets"
+                                   FontSize="30"
+                                   Text="&#xE787;"
+                                   TextColor="#34D399"
+                                   HorizontalOptions="Start" />
+                            <Label Text="RDV Aujourd'hui"
+                                   FontSize="12"
+                                   TextColor="#94A3B8" />
+                            <Label Text="{Binding AppointmentsToday}"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   TextColor="#34D399" />
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Urgences Aujourd'hui -->
+                    <Frame Grid.Column="3"
+                           BackgroundColor="#1E293B"
+                           BorderColor="Transparent"
+                           CornerRadius="15"
+                           HasShadow="False"
+                           Padding="20">
+                        <VerticalStackLayout Spacing="10">
+                            <Label FontFamily="SegoeMDL2Assets"
+                                   FontSize="30"
+                                   Text="&#xE7BA;"
+                                   TextColor="#F87171"
+                                   HorizontalOptions="Start" />
+                            <Label Text="Urgences Aujourd'hui"
+                                   FontSize="12"
+                                   TextColor="#94A3B8" />
+                            <Label Text="{Binding UrgencesToday}"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   TextColor="#F87171" />
+                        </VerticalStackLayout>
+                    </Frame>
+
+                </Grid>
+
+                <!-- Boutons d'action rapide -->
+                <Grid ColumnDefinitions="*,*,*"
+                      ColumnSpacing="15">
+
+                    <!-- Nouveau Rendez-vous -->
+                    <Frame Grid.Column="0"
+                           BackgroundColor="#2563EB"
+                           CornerRadius="12"
+                           HasShadow="False"
+                           Padding="0">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NewAppointmentCommand}" />
+                        </Frame.GestureRecognizers>
+                        <VerticalStackLayout Spacing="8"
+                                             Padding="15"
+                                             HeightRequest="80"
+                                             VerticalOptions="Center">
+                            <Label FontFamily="SegoeMDL2Assets"
+                                   FontSize="24"
+                                   Text="&#xE787;"
+                                   TextColor="White"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Nouveau Rendez-vous"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Nouveau Patient -->
+                    <Frame Grid.Column="1"
+                           BackgroundColor="#10B981"
+                           CornerRadius="12"
+                           HasShadow="False"
+                           Padding="0">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NewPatientCommand}" />
+                        </Frame.GestureRecognizers>
+                        <VerticalStackLayout Spacing="8"
+                                             Padding="15"
+                                             HeightRequest="80"
+                                             VerticalOptions="Center">
+                            <Label FontFamily="SegoeMDL2Assets"
+                                   FontSize="24"
+                                   Text="&#xE716;"
+                                   TextColor="White"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Nouveau Patient"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Nouveau Médecin -->
+                    <Frame Grid.Column="2"
+                           BackgroundColor="#8B5CF6"
+                           CornerRadius="12"
+                           HasShadow="False"
+                           Padding="0">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NewMedecinCommand}" />
+                        </Frame.GestureRecognizers>
+                        <VerticalStackLayout Spacing="8"
+                                             Padding="15"
+                                             HeightRequest="80"
+                                             VerticalOptions="Center">
+                            <Label FontFamily="SegoeMDL2Assets"
+                                   FontSize="24"
+                                   Text="&#xE77B;"
+                                   TextColor="White"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Nouveau Médecin"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Frame>
+
+                </Grid>
+
+                <!-- Section Rendez-vous d'Aujourd'hui -->
+                <Frame BackgroundColor="#1E293B"
+                       BorderColor="Transparent"
+                       CornerRadius="15"
+                       HasShadow="False"
+                       Padding="20">
+
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="Rendez-vous d'Aujourd'hui"
+                               FontSize="20"
                                FontAttributes="Bold"
                                TextColor="White" />
-                        <Label Text="{Binding TotalPatients}" 
-                               FontSize="24"
-                               FontAttributes="Bold"
-                               TextColor="White" />
+
+                        <CollectionView ItemsSource="{Binding TodayAppointments}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Margin="0,5"
+                                           BackgroundColor="#0F172A"
+                                           BorderColor="{Binding BorderColor}"
+                                           CornerRadius="10"
+                                           Padding="15">
+
+                                        <Grid ColumnDefinitions="4,*,Auto" ColumnSpacing="15">
+
+                                            <!-- Barre de statut colorée -->
+                                            <BoxView Grid.Column="0"
+                                                     BackgroundColor="{Binding BorderColor}"
+                                                     WidthRequest="4"
+                                                     CornerRadius="2" />
+
+                                            <!-- Informations du RDV -->
+                                            <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                                <Label Text="{Binding PatientName}"
+                                                       FontSize="16"
+                                                       FontAttributes="Bold"
+                                                       TextColor="White" />
+
+                                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="5">
+                                                    <Label Grid.Column="0"
+                                                           Text="{Binding MedecinName}"
+                                                           FontSize="13"
+                                                           TextColor="#94A3B8" />
+                                                    <Label Grid.Column="1"
+                                                           Text="{Binding Type, StringFormat=' • {0}'}"
+                                                           FontSize="13"
+                                                           TextColor="#94A3B8" />
+                                                </Grid>
+
+                                                <Label Text="{Binding Notes}"
+                                                       FontSize="12"
+                                                       TextColor="#64748B"
+                                                       LineBreakMode="TailTruncation" />
+                                            </VerticalStackLayout>
+
+                                            <!-- Heure et statut -->
+                                            <VerticalStackLayout Grid.Column="2"
+                                                                 Spacing="5"
+                                                                 VerticalOptions="Center">
+                                                <Label Text="{Binding Time}"
+                                                       FontSize="16"
+                                                       FontAttributes="Bold"
+                                                       TextColor="White"
+                                                       HorizontalOptions="End" />
+                                                <Frame BackgroundColor="{Binding BorderColor}"
+                                                       Padding="8,4"
+                                                       CornerRadius="6"
+                                                       HasShadow="False">
+                                                    <Label Text="{Binding StatusLabel}"
+                                                           FontSize="10"
+                                                           FontAttributes="Bold"
+                                                           TextColor="White" />
+                                                </Frame>
+                                            </VerticalStackLayout>
+
+                                        </Grid>
+
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Padding="20"
+                                                     Spacing="10"
+                                                     HorizontalOptions="Center">
+                                    <Label FontFamily="SegoeMDL2Assets"
+                                           FontSize="48"
+                                           Text="&#xE787;"
+                                           TextColor="#475569"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="Aucun rendez-vous aujourd'hui"
+                                           FontSize="14"
+                                           TextColor="#64748B"
+                                           HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+
                     </VerticalStackLayout>
+
                 </Frame>
 
-                <Frame BackgroundColor="#673AB7" CornerRadius="12">
-                    <VerticalStackLayout>
-                        <Label Text="Total Médecins" 
-                               FontAttributes="Bold"
-                               TextColor="White" />
-                        <Label Text="{Binding TotalMedecins}" 
-                               FontSize="24"
-                               FontAttributes="Bold"
-                               TextColor="White" />
-                    </VerticalStackLayout>
-                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
 
-                <Frame BackgroundColor="#4CAF50" CornerRadius="12">
-                    <VerticalStackLayout>
-                        <Label Text="RDV Aujourd'hui"
-                               FontAttributes="Bold"
-                               TextColor="White" />
-                        <Label Text="{Binding AppointmentsToday}" 
-                               FontSize="24"
-                               FontAttributes="Bold"
-                               TextColor="White" />
-                    </VerticalStackLayout>
-                </Frame>
-
-                <Frame BackgroundColor="#F44336" CornerRadius="12">
-                    <VerticalStackLayout>
-                        <Label Text="Urgences"
-                               FontAttributes="Bold"
-                               TextColor="White" />
-                        <Label Text="{Binding UrgencesToday}" 
-                               FontSize="24"
-                               FontAttributes="Bold"
-                               TextColor="White" />
-                    </VerticalStackLayout>
-                </Frame>
-
-            </Grid>
-
-            <Label Text="Rendez-vous d'Aujourd'hui"
-                   FontAttributes="Bold"
-                   FontSize="20"
-                   Margin="0,20,0,10"/>
-
-            <CollectionView ItemsSource="{Binding TodayAppointments}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame Padding="10" Margin="0,5"
-                               BorderColor="#ddd" CornerRadius="12">
-
-                            <VerticalStackLayout>
-                                <Label Text="{Binding PatientName}" 
-                                       FontSize="18" 
-                                       FontAttributes="Bold" />
-                                <Label Text="{Binding MedecinName}" 
-                                       FontSize="14" />
-                                <Label Text="{Binding Notes}" 
-                                       FontSize="12" TextColor="#555" />
-                                <Label Text="{Binding Time}" 
-                                       HorizontalOptions="End" />
-                            </VerticalStackLayout>
-
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
-        </VerticalStackLayout>
-    </ScrollView>
 </ContentPage>

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Gestion_RDV.Views.Medecins.MedecinListPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Gestion_RDV.ViewModels.Medecins"
+    Title="Gestion des Médecins"
+    BackgroundColor="#0F172A">
+
+    <Grid RowDefinitions="Auto,Auto,*" Padding="20">
+
+        <!-- En-tête -->
+        <VerticalStackLayout Grid.Row="0" Spacing="10">
+            <Grid ColumnDefinitions="*,Auto">
+                <Label
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    FontSize="28"
+                    Text="Gestion des Médecins"
+                    TextColor="White"
+                    VerticalOptions="Center" />
+
+                <Button
+                    Grid.Column="1"
+                    BackgroundColor="#2563EB"
+                    Command="{Binding AddMedecinCommand}"
+                    CornerRadius="8"
+                    FontAttributes="Bold"
+                    Padding="20,10"
+                    Text="+ Nouveau Médecin"
+                    TextColor="White" />
+            </Grid>
+
+            <Label
+                FontSize="14"
+                Text="{Binding FilteredMedecins.Count, StringFormat='{0} médecin(s) enregistré(s)'}"
+                TextColor="#94A3B8" />
+        </VerticalStackLayout>
+
+        <!-- Barre de recherche -->
+        <Frame
+            Grid.Row="1"
+            Margin="0,20,0,0"
+            BackgroundColor="#1E293B"
+            BorderColor="Transparent"
+            CornerRadius="10"
+            HasShadow="False"
+            Padding="15">
+            <Grid ColumnDefinitions="Auto,*">
+                <Label
+                    Grid.Column="0"
+                    FontFamily="SegoeMDL2Assets"
+                    FontSize="20"
+                    Text="&#xE721;"
+                    TextColor="#64748B"
+                    VerticalOptions="Center" />
+
+                <Entry
+                    Grid.Column="1"
+                    Margin="10,0,0,0"
+                    BackgroundColor="Transparent"
+                    Placeholder="Rechercher un médecin (nom, prénom, spécialité, téléphone...)"
+                    PlaceholderColor="#64748B"
+                    Text="{Binding SearchText}"
+                    TextColor="White" />
+            </Grid>
+        </Frame>
+
+        <!-- Liste des médecins -->
+        <RefreshView
+            Grid.Row="2"
+            Margin="0,20,0,0"
+            Command="{Binding RefreshCommand}"
+            IsRefreshing="{Binding IsBusy}">
+            <CollectionView ItemsSource="{Binding FilteredMedecins}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout
+                        Orientation="Vertical"
+                        Span="3"
+                        HorizontalItemSpacing="20"
+                        VerticalItemSpacing="20" />
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame
+                            BackgroundColor="#2563EB"
+                            BorderColor="Transparent"
+                            CornerRadius="15"
+                            HasShadow="True"
+                            Padding="0">
+
+                            <Grid RowDefinitions="Auto,*,Auto">
+                                <!-- En-tête avec icône -->
+                                <Grid
+                                    Grid.Row="0"
+                                    Padding="20"
+                                    BackgroundColor="#1E40AF">
+                                    <Border
+                                        BackgroundColor="White"
+                                        HeightRequest="80"
+                                        HorizontalOptions="Center"
+                                        StrokeThickness="0"
+                                        WidthRequest="80">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="40" />
+                                        </Border.StrokeShape>
+
+                                        <Label
+                                            FontFamily="SegoeMDL2Assets"
+                                            FontSize="40"
+                                            HorizontalOptions="Center"
+                                            Text="&#xE77B;"
+                                            TextColor="#2563EB"
+                                            VerticalOptions="Center" />
+                                    </Border>
+                                </Grid>
+
+                                <!-- Informations du médecin -->
+                                <VerticalStackLayout
+                                    Grid.Row="1"
+                                    Padding="20"
+                                    Spacing="10">
+
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="18"
+                                        HorizontalOptions="Center"
+                                        LineBreakMode="TailTruncation"
+                                        Text="{Binding FullName}"
+                                        TextColor="White" />
+
+                                    <Label
+                                        FontSize="14"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding Specialite}"
+                                        TextColor="#BFDBFE" />
+
+                                    <BoxView
+                                        HeightRequest="1"
+                                        Margin="0,10"
+                                        Color="#3B82F6" />
+
+                                    <!-- Téléphone -->
+                                    <Grid ColumnDefinitions="Auto,*">
+                                        <Label
+                                            Grid.Column="0"
+                                            FontFamily="SegoeMDL2Assets"
+                                            FontSize="14"
+                                            Text="&#xE717;"
+                                            TextColor="#93C5FD"
+                                            VerticalOptions="Center" />
+
+                                        <Label
+                                            Grid.Column="1"
+                                            Margin="10,0,0,0"
+                                            FontSize="13"
+                                            LineBreakMode="TailTruncation"
+                                            Text="{Binding Phone}"
+                                            TextColor="#DBEAFE"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+
+                                    <!-- Email -->
+                                    <Grid ColumnDefinitions="Auto,*">
+                                        <Label
+                                            Grid.Column="0"
+                                            FontFamily="SegoeMDL2Assets"
+                                            FontSize="14"
+                                            Text="&#xE715;"
+                                            TextColor="#93C5FD"
+                                            VerticalOptions="Center" />
+
+                                        <Label
+                                            Grid.Column="1"
+                                            Margin="10,0,0,0"
+                                            FontSize="13"
+                                            LineBreakMode="TailTruncation"
+                                            Text="{Binding Email}"
+                                            TextColor="#DBEAFE"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+
+                                    <!-- Rendez-vous (placeholder pour future fonctionnalité) -->
+                                    <Grid ColumnDefinitions="Auto,*" Margin="0,5,0,0">
+                                        <Label
+                                            Grid.Column="0"
+                                            FontSize="12"
+                                            Text="Rendez-vous"
+                                            TextColor="#93C5FD" />
+
+                                        <Label
+                                            Grid.Column="1"
+                                            HorizontalOptions="End"
+                                            FontAttributes="Bold"
+                                            FontSize="16"
+                                            Text="0"
+                                            TextColor="White" />
+                                    </Grid>
+                                </VerticalStackLayout>
+
+                                <!-- Boutons d'action -->
+                                <Grid
+                                    Grid.Row="2"
+                                    ColumnDefinitions="*,*"
+                                    Padding="0">
+
+                                    <Button
+                                        Grid.Column="0"
+                                        BackgroundColor="#1E40AF"
+                                        BorderWidth="0"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MedecinListViewModel}}, Path=EditMedecinCommand}"
+                                        CommandParameter="{Binding .}"
+                                        CornerRadius="0"
+                                        FontFamily="SegoeMDL2Assets"
+                                        FontSize="16"
+                                        Padding="15"
+                                        Text="&#xE70F; Modifier"
+                                        TextColor="#60A5FA" />
+
+                                    <Button
+                                        Grid.Column="1"
+                                        BackgroundColor="#1E40AF"
+                                        BorderWidth="0"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MedecinListViewModel}}, Path=DeleteMedecinCommand}"
+                                        CommandParameter="{Binding .}"
+                                        CornerRadius="0"
+                                        FontFamily="SegoeMDL2Assets"
+                                        FontSize="16"
+                                        Padding="15"
+                                        Text="&#xE74D; Supprimer"
+                                        TextColor="#EF4444" />
+                                </Grid>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Spacing="15">
+                        <Label
+                            FontFamily="SegoeMDL2Assets"
+                            FontSize="60"
+                            HorizontalOptions="Center"
+                            Text="&#xE77B;"
+                            TextColor="#475569" />
+                        <Label
+                            FontSize="18"
+                            HorizontalOptions="Center"
+                            Text="Aucun médecin enregistré"
+                            TextColor="#64748B" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

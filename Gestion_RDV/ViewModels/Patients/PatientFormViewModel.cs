@@ -9,14 +9,63 @@ public class PatientFormViewModel : BaseViewModel
 {
     private readonly DatabaseService _db;
 
-    public string PatientId { get; set; }
+    private string _patientId;
+    public string PatientId
+    {
+        get => _patientId;
+        set
+        {
+            _patientId = value;
+            OnPropertyChanged();
+            // Charger les données du patient lorsque l'ID est défini
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                Task.Run(async () => await LoadAsync());
+            }
+        }
+    }
 
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string BirthDateString { get; set; }
-    public string Email { get; set; }
-    public string Phone { get; set; }
-    public string Notes { get; set; }
+    private string _firstName;
+    public string FirstName
+    {
+        get => _firstName;
+        set { _firstName = value; OnPropertyChanged(); }
+    }
+
+    private string _lastName;
+    public string LastName
+    {
+        get => _lastName;
+        set { _lastName = value; OnPropertyChanged(); }
+    }
+
+    private string _birthDateString;
+    public string BirthDateString
+    {
+        get => _birthDateString;
+        set { _birthDateString = value; OnPropertyChanged(); }
+    }
+
+    private string _email;
+    public string Email
+    {
+        get => _email;
+        set { _email = value; OnPropertyChanged(); }
+    }
+
+    private string _phone;
+    public string Phone
+    {
+        get => _phone;
+        set { _phone = value; OnPropertyChanged(); }
+    }
+
+    private string _notes;
+    public string Notes
+    {
+        get => _notes;
+        set { _notes = value; OnPropertyChanged(); }
+    }
 
     public ICommand SaveCommand { get; }
 
@@ -40,8 +89,6 @@ public class PatientFormViewModel : BaseViewModel
         Phone = patient.Phone;
         Notes = patient.Notes;
         BirthDateString = patient.DateNaissance.ToString("dd/MM/yyyy");
-
-        OnPropertyChanged(null);
     }
 
     private async Task SaveAsync()
@@ -63,14 +110,17 @@ public class PatientFormViewModel : BaseViewModel
         else
         {
             var p = await _db.GetPatientAsync(int.Parse(PatientId));
-            p.FirstName = FirstName;
-            p.LastName = LastName;
-            p.Email = Email;
-            p.Phone = Phone;
-            p.Notes = Notes;
-            p.DateNaissance = birth;
+            if (p != null)
+            {
+                p.FirstName = FirstName;
+                p.LastName = LastName;
+                p.Email = Email;
+                p.Phone = Phone;
+                p.Notes = Notes;
+                p.DateNaissance = birth;
 
-            await _db.UpdatePatientAsync(p);
+                await _db.UpdatePatientAsync(p);
+            }
         }
 
         await Shell.Current.GoToAsync("..");
