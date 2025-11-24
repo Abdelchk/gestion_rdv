@@ -11,8 +11,12 @@ namespace Gestion_RDV.ViewModels.RendezVous
     {
         private readonly IAppointmentRepository _appointmentRepository;
 
-        public ObservableCollection<RendezVous> Appointments { get; } = new ObservableCollection<RendezVous>();
+        public ObservableCollection<Models.RendezVous> Appointments { get; } = new ObservableCollection<Models.RendezVous>();
         public ICommand LoadAppointmentsCommand { get; }
+
+        public AppointmentListViewModel() : this(null!)
+        {
+        }
 
         public AppointmentListViewModel(IAppointmentRepository appointmentRepository)
         {

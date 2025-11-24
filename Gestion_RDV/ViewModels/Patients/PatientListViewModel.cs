@@ -15,6 +15,11 @@ namespace Gestion_RDV.ViewModels.Patients
 
         public ICommand LoadPatientsCommand { get; }
 
+        // Constructeur sans paramètre pour le designer XAML
+        public PatientListViewModel() : this(null!)
+        {
+        }
+
         public PatientListViewModel(IPatientRepository patientRepository)
         {
             _patientRepository = patientRepository;
@@ -23,6 +28,9 @@ namespace Gestion_RDV.ViewModels.Patients
 
         public async Task LoadAsync()
         {
+            if (_patientRepository == null)
+                return;
+
             Patients.Clear();
             var items = await _patientRepository.GetAllAsync();
             foreach (var p in items)

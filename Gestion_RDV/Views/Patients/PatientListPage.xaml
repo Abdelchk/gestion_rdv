@@ -5,10 +5,6 @@
              x:Class="Gestion_RDV.Views.Patients.PatientListPage"
              Title="Patients">
 
-    <ContentPage.BindingContext>
-        <vm:PatientListViewModel />
-    </ContentPage.BindingContext>
-
     <CollectionView ItemsSource="{Binding Patients}">
         <CollectionView.ItemTemplate>
             <DataTemplate>

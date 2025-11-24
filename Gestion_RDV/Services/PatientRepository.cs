@@ -19,7 +19,7 @@ namespace Gestion_RDV.Services
         public Task<int> AddAsync(Patient patient) => Conn.InsertAsync(patient);
         public Task<int> DeleteAsync(int id) => Conn.DeleteAsync<Patient>(id);
         public Task<List<Patient>> GetAllAsync() => Conn.Table<Patient>().ToListAsync();
-        public Task<Patient?> GetByIdAsync(int id) => Conn.FindAsync<Patient>(id).AsTask();
+        public Task<Patient?> GetByIdAsync(int id) => Conn.FindAsync<Patient>(id);
         public Task<int> UpdateAsync(Patient patient) => Conn.UpdateAsync(patient);
         public Task<List<Patient>> SearchAsync(string query)
         {
