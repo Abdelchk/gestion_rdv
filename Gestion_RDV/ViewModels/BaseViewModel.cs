@@ -7,18 +7,34 @@ namespace Gestion_RDV.ViewModels
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected void SetProperty<T>(ref T backingStore, T value, [CallerMemberName] string? propertyName = null)
+        bool isBusy;
+        public bool IsBusy
         {
-            if (Equals(backingStore, value))
-                return;
+            get => isBusy;
+            set { SetProperty(ref isBusy, value); }
+        }
+
+        string title = string.Empty;
+        public string Title
+        {
+            get => title;
+            set { SetProperty(ref title, value); }
+        }
+
+        protected bool SetProperty<T>(ref T backingStore, T value,
+            [CallerMemberName] string propertyName = "",
+            Action? onChanged = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(backingStore, value))
+                return false;
 
             backingStore = value;
+            onChanged?.Invoke();
             OnPropertyChanged(propertyName);
+            return true;
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

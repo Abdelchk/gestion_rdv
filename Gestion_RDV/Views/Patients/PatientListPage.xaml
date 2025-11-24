@@ -1,23 +1,75 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vm="clr-namespace:Gestion_RDV.ViewModels.Patients"
-             x:Class="Gestion_RDV.Views.Patients.PatientListPage"
-             Title="Patients">
+<ContentPage
+    x:Class="Gestion_RDV.Views.Patients.PatientListPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:Gestion_RDV.ViewModels.Patients"
+    Title="Patients">
 
-    <ContentPage.BindingContext>
-        <vm:PatientListViewModel />
-    </ContentPage.BindingContext>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Nouveau Patient"
+                     Priority="0"
+                     Order="Primary"
+                     Clicked="OnAddPatientClicked" />
+    </ContentPage.ToolbarItems>
 
-    <CollectionView ItemsSource="{Binding Patients}">
-        <CollectionView.ItemTemplate>
-            <DataTemplate>
-                <Grid Padding="10">
-                    <Label Text="{Binding FirstName}" />
-                    <Label Text=", {Binding LastName}" />
-                </Grid>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <Label Text="Gestion des Patients"
+               FontAttributes="Bold"
+               FontSize="26" />
+
+        <!-- SEARCH BAR -->
+        <SearchBar Placeholder="Rechercher un patient..."
+                   TextChanged="OnSearchTextChanged" />
+
+        <!-- LIST OF PATIENTS -->
+        <CollectionView x:Name="PatientsCollection"
+                        ItemsSource="{Binding Patients}"
+                        SelectionMode="None">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+
+                    <Frame Padding="12" Margin="0,6"
+                           BorderColor="#ddd"
+                           CornerRadius="12"
+                           HasShadow="False">
+
+                        <VerticalStackLayout>
+
+                            <Label Text="{Binding FullName}"
+                                   FontAttributes="Bold"
+                                   FontSize="18" />
+
+                            <Label Text="{Binding DateNaissance, StringFormat='Né(e) le {0:dd/MM/yyyy}'}" />
+                            <Label Text="{Binding Phone}" />
+                            <Label Text="{Binding Email}" />
+
+                            <HorizontalStackLayout Spacing="20"
+                                                  HorizontalOptions="End">
+
+                                <ImageButton Source="edit.png"
+                                             HeightRequest="22"
+                                             CommandParameter="{Binding}"
+                                             Clicked="OnEditPatientClicked"/>
+
+                                <ImageButton Source="delete.png"
+                                             HeightRequest="22"
+                                             CommandParameter="{Binding}"
+                                             Clicked="OnDeletePatientClicked"/>
+
+                            </HorizontalStackLayout>
+
+                        </VerticalStackLayout>
+
+                    </Frame>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </VerticalStackLayout>
 
 </ContentPage>

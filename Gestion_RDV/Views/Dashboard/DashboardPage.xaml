@@ -1,13 +1,104 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Gestion_RDV.Views.Dashboard.DashboardPage"
-             Title="Dashboard">
+<ContentPage 
+    x:Class="Gestion_RDV.Views.Dashboard.DashboardPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:Gestion_RDV.ViewModels.Dashboard"
+    Title="Tableau de Bord">
 
-    <VerticalStackLayout Padding="20">
-        <Label Text="Dashboard" FontSize="24" />
-        <Label Text="Nombre total de patients: 0" />
-        <Label Text="RDV du jour: 0" />
-    </VerticalStackLayout>
+    <ContentPage.BindingContext>
+        <viewModels:DashboardViewModel />
+    </ContentPage.BindingContext>
 
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="Tableau de Bord"
+                   FontSize="26"
+                   FontAttributes="Bold" />
+
+            <Grid ColumnDefinitions="*,*,*,*"
+                  RowDefinitions="Auto"
+                  ColumnSpacing="10">
+
+                <Frame BackgroundColor="#2196F3" CornerRadius="12">
+                    <VerticalStackLayout>
+                        <Label Text="Total Patients" 
+                               FontAttributes="Bold"
+                               TextColor="White" />
+                        <Label Text="{Binding TotalPatients}" 
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="White" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame BackgroundColor="#673AB7" CornerRadius="12">
+                    <VerticalStackLayout>
+                        <Label Text="Total Médecins" 
+                               FontAttributes="Bold"
+                               TextColor="White" />
+                        <Label Text="{Binding TotalMedecins}" 
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="White" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame BackgroundColor="#4CAF50" CornerRadius="12">
+                    <VerticalStackLayout>
+                        <Label Text="RDV Aujourd'hui"
+                               FontAttributes="Bold"
+                               TextColor="White" />
+                        <Label Text="{Binding AppointmentsToday}" 
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="White" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame BackgroundColor="#F44336" CornerRadius="12">
+                    <VerticalStackLayout>
+                        <Label Text="Urgences"
+                               FontAttributes="Bold"
+                               TextColor="White" />
+                        <Label Text="{Binding UrgencesToday}" 
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="White" />
+                    </VerticalStackLayout>
+                </Frame>
+
+            </Grid>
+
+            <Label Text="Rendez-vous d'Aujourd'hui"
+                   FontAttributes="Bold"
+                   FontSize="20"
+                   Margin="0,20,0,10"/>
+
+            <CollectionView ItemsSource="{Binding TodayAppointments}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="0,5"
+                               BorderColor="#ddd" CornerRadius="12">
+
+                            <VerticalStackLayout>
+                                <Label Text="{Binding PatientName}" 
+                                       FontSize="18" 
+                                       FontAttributes="Bold" />
+                                <Label Text="{Binding MedecinName}" 
+                                       FontSize="14" />
+                                <Label Text="{Binding Notes}" 
+                                       FontSize="12" TextColor="#555" />
+                                <Label Text="{Binding Time}" 
+                                       HorizontalOptions="End" />
+                            </VerticalStackLayout>
+
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

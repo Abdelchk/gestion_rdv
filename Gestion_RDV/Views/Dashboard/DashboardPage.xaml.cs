@@ -1,10 +1,9 @@
-namespace Gestion_RDV.Views.Dashboard
+namespace Gestion_RDV.Views.Dashboard;
+
+public partial class DashboardPage : ContentPage
 {
-    public partial class DashboardPage : ContentPage
+    public DashboardPage()
     {
-        public DashboardPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }
