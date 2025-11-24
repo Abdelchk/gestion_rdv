@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gestion_RDV.Views.Dashboard.DashboardPage"
+             Title="Dashboard">
+
+    <VerticalStackLayout Padding="20">
+        <Label Text="Dashboard" FontSize="24" />
+        <Label Text="Nombre total de patients: 0" />
+        <Label Text="RDV du jour: 0" />
+    </VerticalStackLayout>
+
+</ContentPage>
