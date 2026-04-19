@@ -16,7 +16,6 @@ public partial class PatientFormPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        // Charger les données du patient si c'est une édition
         await _vm.LoadAsync();
     }
 }

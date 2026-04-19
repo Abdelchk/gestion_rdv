@@ -33,6 +33,7 @@ public static class MauiProgram
         builder.Services.AddTransient<MedecinListViewModel>();
         builder.Services.AddTransient<MedecinFormViewModel>();
         builder.Services.AddTransient<AppointmentFormViewModel>();
+        builder.Services.AddTransient<AppointmentListViewModel>();
 
         // Views
         builder.Services.AddTransient<DashboardPage>();
@@ -41,7 +42,8 @@ public static class MauiProgram
         builder.Services.AddTransient<MedecinListPage>();
         builder.Services.AddTransient<MedecinFormPage>();
         builder.Services.AddTransient<AppointmentFormPage>();
-    
+        builder.Services.AddTransient<AppointmentListPage>();
+
         return builder.Build();
     }
 }

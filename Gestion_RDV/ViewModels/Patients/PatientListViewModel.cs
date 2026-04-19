@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using Gestion_RDV.Models;
 using Gestion_RDV.Services;
 
@@ -8,51 +9,118 @@ public class PatientListViewModel : BaseViewModel
 {
     private readonly DatabaseService _database;
 
-    public ObservableCollection<Patient> Patients { get; set; } = new();
+    private string _searchText = string.Empty;
+    public string SearchText
+    {
+        get => _searchText;
+        set
+        {
+            _searchText = value;
+            OnPropertyChanged();
+            FilterPatients();
+        }
+    }
+
+    public ObservableCollection<Patient> Patients { get; } = new();
+    public ObservableCollection<Patient> FilteredPatients { get; } = new();
+
+    public ICommand AddPatientCommand { get; }
+    public ICommand EditPatientCommand { get; }
+    public ICommand DeletePatientCommand { get; }
+    public ICommand RefreshCommand { get; }
+
+    public PatientListViewModel() : this(null!)
+    {
+    }
 
     public PatientListViewModel(DatabaseService db)
     {
         _database = db;
+
+        AddPatientCommand = new Command(async () => await AddPatientAsync());
+        EditPatientCommand = new Command<Patient>(async (p) => await EditPatientAsync(p));
+        DeletePatientCommand = new Command<Patient>(async (p) => await DeletePatientAsync(p));
+        RefreshCommand = new Command(async () => await LoadAsync());
     }
 
     public async Task LoadAsync()
     {
-        Patients.Clear();
-        var list = await _database.GetPatientsAsync();
-        foreach (var p in list)
-            Patients.Add(p);
-    }
-
-    public void FilterPatients(string text)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-        {
-            _ = LoadAsync();
+        if (_database == null)
             return;
+
+        IsBusy = true;
+
+        try
+        {
+            var list = await _database.GetPatientsAsync();
+
+            Patients.Clear();
+            FilteredPatients.Clear();
+
+            foreach (var p in list)
+            {
+                Patients.Add(p);
+                FilteredPatients.Add(p);
+            }
         }
-
-        var filtered = Patients
-            .Where(p =>
-                p.FullName.ToLower().Contains(text.ToLower()) ||
-                p.Email.ToLower().Contains(text.ToLower()) ||
-                p.Phone.ToLower().Contains(text.ToLower()))
-            .ToList();
-
-        Patients.Clear();
-        foreach (var p in filtered)
-            Patients.Add(p);
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
-    public async Task DeleteAsync(Patient p)
+    private void FilterPatients()
     {
+        FilteredPatients.Clear();
+
+        if (string.IsNullOrWhiteSpace(SearchText))
+        {
+            foreach (var p in Patients)
+                FilteredPatients.Add(p);
+        }
+        else
+        {
+            var query = SearchText.ToLower();
+            foreach (var p in Patients)
+            {
+                if (p.FullName.ToLower().Contains(query) ||
+                    p.Email.ToLower().Contains(query) ||
+                    p.Phone.Contains(query))
+                {
+                    FilteredPatients.Add(p);
+                }
+            }
+        }
+    }
+
+    private async Task AddPatientAsync()
+    {
+        await Shell.Current.GoToAsync("PatientFormPage");
+    }
+
+    private async Task EditPatientAsync(Patient patient)
+    {
+        if (patient == null)
+            return;
+
+        await Shell.Current.GoToAsync($"PatientFormPage?PatientId={patient.Id}");
+    }
+
+    private async Task DeletePatientAsync(Patient patient)
+    {
+        if (patient == null)
+            return;
+
         bool confirm = await Shell.Current.DisplayAlert(
-            "Supprimer",
-            $"Supprimer {p.FullName} ?",
-            "Oui", "Non");
+            "Confirmation",
+            $"Voulez-vous vraiment supprimer {patient.FullName} ?",
+            "Oui",
+            "Non");
 
-        if (!confirm) return;
+        if (!confirm)
+            return;
 
-        await _database.DeletePatientAsync(p);
+        await _database.DeletePatientAsync(patient);
         await LoadAsync();
     }
 }

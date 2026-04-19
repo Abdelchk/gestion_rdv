@@ -5,24 +5,31 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:patients="clr-namespace:Gestion_RDV.Views.Patients"
     xmlns:medecins="clr-namespace:Gestion_RDV.Views.Medecins"
-    xmlns:dashboard="clr-namespace:Gestion_RDV.Views.Dashboard">
-    
+    xmlns:rdv="clr-namespace:Gestion_RDV.Views.RendezVous"
+    xmlns:dashboard="clr-namespace:Gestion_RDV.Views.Dashboard"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.TabBarBackgroundColor="White"
+    Shell.TabBarForegroundColor="#1E293B"
+    Shell.TabBarTitleColor="#1E293B"
+    Shell.TabBarUnselectedColor="#64748B">
+
     <TabBar>
 
-        <ShellContent
-            Title="Tableau de Bord"
-            ContentTemplate="{DataTemplate dashboard:DashboardPage}"
-            Icon="dashboard.png" />
+        <Tab Title="📊 Tableau de Bord" Route="dashboard">
+            <ShellContent ContentTemplate="{DataTemplate dashboard:DashboardPage}" />
+        </Tab>
 
-        <ShellContent
-            Title="Patients"
-            ContentTemplate="{DataTemplate patients:PatientListPage}"
-            Icon="patients.png" />
+        <Tab Title="👥 Patients" Route="patients">
+            <ShellContent ContentTemplate="{DataTemplate patients:PatientListPage}" />
+        </Tab>
 
-        <ShellContent
-            Title="Médecins"
-            ContentTemplate="{DataTemplate medecins:MedecinListPage}"
-            Icon="medecins.png" />
+        <Tab Title="🩺 Médecins" Route="medecins">
+            <ShellContent ContentTemplate="{DataTemplate medecins:MedecinListPage}" />
+        </Tab>
+
+        <Tab Title="📅 Rendez-vous" Route="rendezvous">
+            <ShellContent ContentTemplate="{DataTemplate rdv:AppointmentListPage}" />
+        </Tab>
 
     </TabBar>
 

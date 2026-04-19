@@ -20,5 +20,20 @@
 
             SemanticScreenReader.Announce(CounterBtn.Text);
         }
+
+        private async void OnShowDbPathClicked(object? sender, EventArgs e)
+        {
+            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "gestion_rdv.db");
+
+            await DisplayAlert(
+                "Chemin de la Base de Données",
+                $"Fichier SQLite :\n\n{dbPath}\n\n" +
+                $"Dossier :\n{FileSystem.AppDataDirectory}",
+                "Copier le chemin",
+                "Fermer");
+
+            // Copier dans le presse-papier (optionnel)
+            await Clipboard.Default.SetTextAsync(dbPath);
+        }
     }
 }

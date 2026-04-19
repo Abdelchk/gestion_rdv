@@ -41,7 +41,7 @@
         <Frame
             Grid.Row="1"
             Margin="0,20,0,0"
-            BackgroundColor="#1E293B"
+            BackgroundColor="#F8FAFC"
             BorderColor="Transparent"
             CornerRadius="10"
             HasShadow="False"
@@ -49,9 +49,8 @@
             <Grid ColumnDefinitions="Auto,*">
                 <Label
                     Grid.Column="0"
-                    FontFamily="SegoeMDL2Assets"
                     FontSize="20"
-                    Text="&#xE721;"
+                    Text="🔍"
                     TextColor="#64748B"
                     VerticalOptions="Center" />
 
@@ -60,9 +59,9 @@
                     Margin="10,0,0,0"
                     BackgroundColor="Transparent"
                     Placeholder="Rechercher un médecin (nom, prénom, spécialité, téléphone...)"
-                    PlaceholderColor="#64748B"
+                    PlaceholderColor="#94A3B8"
                     Text="{Binding SearchText}"
-                    TextColor="White" />
+                    TextColor="#1E293B" />
             </Grid>
         </Frame>
 
@@ -84,7 +83,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame
-                            BackgroundColor="#2563EB"
+                            BackgroundColor="White"
                             BorderColor="Transparent"
                             CornerRadius="15"
                             HasShadow="True"
@@ -95,7 +94,7 @@
                                 <Grid
                                     Grid.Row="0"
                                     Padding="20"
-                                    BackgroundColor="#1E40AF">
+                                    BackgroundColor="#2563EB">
                                     <Border
                                         BackgroundColor="White"
                                         HeightRequest="80"
@@ -107,10 +106,9 @@
                                         </Border.StrokeShape>
 
                                         <Label
-                                            FontFamily="SegoeMDL2Assets"
                                             FontSize="40"
                                             HorizontalOptions="Center"
-                                            Text="&#xE77B;"
+                                            Text="🩺"
                                             TextColor="#2563EB"
                                             VerticalOptions="Center" />
                                     </Border>
@@ -128,26 +126,25 @@
                                         HorizontalOptions="Center"
                                         LineBreakMode="TailTruncation"
                                         Text="{Binding FullName}"
-                                        TextColor="White" />
+                                        TextColor="Black" />
 
                                     <Label
                                         FontSize="14"
                                         HorizontalOptions="Center"
                                         Text="{Binding Specialite}"
-                                        TextColor="#BFDBFE" />
+                                        TextColor="Black" />
 
                                     <BoxView
                                         HeightRequest="1"
                                         Margin="0,10"
-                                        Color="#3B82F6" />
+                                        Color="Black" />
 
                                     <!-- Téléphone -->
                                     <Grid ColumnDefinitions="Auto,*">
                                         <Label
                                             Grid.Column="0"
-                                            FontFamily="SegoeMDL2Assets"
                                             FontSize="14"
-                                            Text="&#xE717;"
+                                            Text="📞"
                                             TextColor="#93C5FD"
                                             VerticalOptions="Center" />
 
@@ -157,7 +154,7 @@
                                             FontSize="13"
                                             LineBreakMode="TailTruncation"
                                             Text="{Binding Phone}"
-                                            TextColor="#DBEAFE"
+                                            TextColor="Black"
                                             VerticalOptions="Center" />
                                     </Grid>
 
@@ -165,9 +162,8 @@
                                     <Grid ColumnDefinitions="Auto,*">
                                         <Label
                                             Grid.Column="0"
-                                            FontFamily="SegoeMDL2Assets"
                                             FontSize="14"
-                                            Text="&#xE715;"
+                                            Text="📧"
                                             TextColor="#93C5FD"
                                             VerticalOptions="Center" />
 
@@ -177,7 +173,7 @@
                                             FontSize="13"
                                             LineBreakMode="TailTruncation"
                                             Text="{Binding Email}"
-                                            TextColor="#DBEAFE"
+                                            TextColor="Black"
                                             VerticalOptions="Center" />
                                     </Grid>
 
@@ -187,7 +183,7 @@
                                             Grid.Column="0"
                                             FontSize="12"
                                             Text="Rendez-vous"
-                                            TextColor="#93C5FD" />
+                                            TextColor="Black" />
 
                                         <Label
                                             Grid.Column="1"
@@ -195,7 +191,7 @@
                                             FontAttributes="Bold"
                                             FontSize="16"
                                             Text="0"
-                                            TextColor="White" />
+                                            TextColor="Black" />
                                     </Grid>
                                 </VerticalStackLayout>
 
@@ -207,7 +203,7 @@
 
                                     <Button
                                         Grid.Column="0"
-                                        BackgroundColor="#1E40AF"
+                                        BackgroundColor="White"
                                         BorderWidth="0"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MedecinListViewModel}}, Path=EditMedecinCommand}"
                                         CommandParameter="{Binding .}"
@@ -215,12 +211,12 @@
                                         FontFamily="SegoeMDL2Assets"
                                         FontSize="16"
                                         Padding="15"
-                                        Text="&#xE70F; Modifier"
+                                        Text="✏️ Modifier"
                                         TextColor="#60A5FA" />
 
                                     <Button
                                         Grid.Column="1"
-                                        BackgroundColor="#1E40AF"
+                                        BackgroundColor="White"
                                         BorderWidth="0"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MedecinListViewModel}}, Path=DeleteMedecinCommand}"
                                         CommandParameter="{Binding .}"
@@ -228,7 +224,7 @@
                                         FontFamily="SegoeMDL2Assets"
                                         FontSize="16"
                                         Padding="15"
-                                        Text="&#xE74D; Supprimer"
+                                        Text="🗑️ Supprimer"
                                         TextColor="#EF4444" />
                                 </Grid>
                             </Grid>
@@ -245,7 +241,7 @@
                             FontFamily="SegoeMDL2Assets"
                             FontSize="60"
                             HorizontalOptions="Center"
-                            Text="&#xE77B;"
+                            Text="🩺"
                             TextColor="#475569" />
                         <Label
                             FontSize="18"

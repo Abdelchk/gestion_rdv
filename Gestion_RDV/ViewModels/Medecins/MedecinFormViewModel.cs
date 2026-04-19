@@ -9,7 +9,7 @@ public class MedecinFormViewModel : BaseViewModel
 {
     private readonly DatabaseService _db;
 
-    private string _medecinId;
+    private string _medecinId = string.Empty;
     public string MedecinId
     {
         get => _medecinId;
@@ -25,35 +25,35 @@ public class MedecinFormViewModel : BaseViewModel
         }
     }
 
-    private string _firstName;
+    private string _firstName = string.Empty;
     public string FirstName
     {
         get => _firstName;
         set { _firstName = value; OnPropertyChanged(); }
     }
 
-    private string _lastName;
+    private string _lastName = string.Empty;
     public string LastName
     {
         get => _lastName;
         set { _lastName = value; OnPropertyChanged(); }
     }
 
-    private string _specialite;
+    private string _specialite = string.Empty;
     public string Specialite
     {
         get => _specialite;
         set { _specialite = value; OnPropertyChanged(); }
     }
 
-    private string _email;
+    private string _email = string.Empty;
     public string Email
     {
         get => _email;
         set { _email = value; OnPropertyChanged(); }
     }
 
-    private string _phone;
+    private string _phone = string.Empty;
     public string Phone
     {
         get => _phone;

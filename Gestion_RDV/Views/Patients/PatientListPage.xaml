@@ -3,73 +3,292 @@
     x:Class="Gestion_RDV.Views.Patients.PatientListPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:viewModels="clr-namespace:Gestion_RDV.ViewModels.Patients"
-    Title="Patients">
+    xmlns:vm="clr-namespace:Gestion_RDV.ViewModels.Patients"
+    Title="Patients"
+    BackgroundColor="#0F172A">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Nouveau Patient"
-                     Priority="0"
-                     Order="Primary"
-                     Clicked="OnAddPatientClicked" />
-    </ContentPage.ToolbarItems>
+    <Grid RowDefinitions="Auto,Auto,*" Padding="20">
 
-    <VerticalStackLayout Padding="20" Spacing="15">
+        <!-- En-tête -->
+        <VerticalStackLayout Grid.Row="0" Spacing="10">
+            <Grid ColumnDefinitions="*,Auto">
+                <Label
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    FontSize="28"
+                    Text="Gestion des Patients"
+                    TextColor="White"
+                    VerticalOptions="Center" />
 
-        <Label Text="Gestion des Patients"
-               FontAttributes="Bold"
-               FontSize="26" />
+                <Button
+                    Grid.Column="1"
+                    BackgroundColor="#2563EB"
+                    Command="{Binding AddPatientCommand}"
+                    CornerRadius="8"
+                    FontAttributes="Bold"
+                    Padding="20,10"
+                    Text="+ Nouveau Patient"
+                    TextColor="White" />
+            </Grid>
 
-        <!-- SEARCH BAR -->
-        <SearchBar Placeholder="Rechercher un patient..."
-                   TextChanged="OnSearchTextChanged" />
+            <Label
+                FontSize="14"
+                Text="{Binding Patients.Count, StringFormat='{0} patient(s) enregistré(s)'}"
+                TextColor="#94A3B8" />
+        </VerticalStackLayout>
 
-        <!-- LIST OF PATIENTS -->
-        <CollectionView x:Name="PatientsCollection"
-                        ItemsSource="{Binding Patients}"
-                        SelectionMode="None">
+        <!-- Barre de recherche -->
+        <Frame
+            Grid.Row="1"
+            Margin="0,20,0,0"
+            BackgroundColor="#F8FAFC"
+            BorderColor="Transparent"
+            CornerRadius="10"
+            HasShadow="False"
+            Padding="15">
+            <Grid ColumnDefinitions="Auto,*">
+                <Label
+                    Grid.Column="0"
+                    FontSize="20"
+                    Text="🔍"
+                    TextColor="#64748B"
+                    VerticalOptions="Center" />
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <Entry
+                    Grid.Column="1"
+                    Margin="10,0,0,0"
+                    BackgroundColor="Transparent"
+                    Placeholder="Rechercher un patient (nom, prénom, téléphone, email...)"
+                    PlaceholderColor="#94A3B8"
+                    Text="{Binding SearchText}"
+                    TextColor="#1E293B" />
+            </Grid>
+        </Frame>
 
-                    <Frame Padding="12" Margin="0,6"
-                           BorderColor="#ddd"
-                           CornerRadius="12"
-                           HasShadow="False">
+        <!-- Liste des patients en tableau -->
+        <Frame
+            Grid.Row="2"
+            Margin="0,20,0,0"
+            BackgroundColor="#F8FAFC"
+            BorderColor="Transparent"
+            CornerRadius="15"
+            HasShadow="False"
+            Padding="0">
 
-                        <VerticalStackLayout>
+            <Grid RowDefinitions="Auto,*">
 
-                            <Label Text="{Binding FullName}"
-                                   FontAttributes="Bold"
-                                   FontSize="18" />
+                <!-- En-tête du tableau -->
+                <Grid
+                    Grid.Row="0"
+                    ColumnDefinitions="60,2*,1*,2*,3*,Auto"
+                    Padding="20,15"
+                    BackgroundColor="#F8FAFC">
 
-                            <Label Text="{Binding DateNaissance, StringFormat='Né(e) le {0:dd/MM/yyyy}'}" />
-                            <Label Text="{Binding Phone}" />
-                            <Label Text="{Binding Email}" />
+                    <Label
+                        Grid.Column="0"
+                        Text=""
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        TextColor="#94A3B8" />
 
-                            <HorizontalStackLayout Spacing="20"
-                                                  HorizontalOptions="End">
+                    <Label
+                        Grid.Column="1"
+                        Text="Patient"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        TextColor="#475569" />
 
-                                <ImageButton Source="edit.png"
-                                             HeightRequest="22"
-                                             CommandParameter="{Binding}"
-                                             Clicked="OnEditPatientClicked"/>
+                    <Label
+                        Grid.Column="2"
+                        Text="Âge"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        TextColor="#475569" />
 
-                                <ImageButton Source="delete.png"
-                                             HeightRequest="22"
-                                             CommandParameter="{Binding}"
-                                             Clicked="OnDeletePatientClicked"/>
+                    <Label
+                        Grid.Column="3"
+                        Text="Contact"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        TextColor="#475569" />
 
-                            </HorizontalStackLayout>
+                    <Label
+                        Grid.Column="4"
+                        Text="Notes Médicales"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        TextColor="#475569" />
 
+                    <Label
+                        Grid.Column="5"
+                        Text="Actions"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        TextColor="#475569"
+                        HorizontalOptions="Center" />
+                </Grid>
+
+                <!-- Liste des patients -->
+                <CollectionView
+                    Grid.Row="1"
+                    ItemsSource="{Binding FilteredPatients}">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid
+                                ColumnDefinitions="60,2*,1*,2*,3*,Auto"
+                                Padding="20,15"
+                                RowSpacing="0">
+
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PatientListViewModel}}, Path=EditPatientCommand}"
+                                                         CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+
+                                <!-- Avatar -->
+                                <Border
+                                    Grid.Column="0"
+                                    BackgroundColor="#60A5FA"
+                                    HeightRequest="40"
+                                    WidthRequest="40"
+                                    StrokeThickness="0"
+                                    VerticalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="20" />
+                                    </Border.StrokeShape>
+                                    <Label
+                                        FontSize="20"
+                                        HorizontalOptions="Center"
+                                        Text="👤"
+                                        TextColor="White"
+                                        VerticalOptions="Center" />
+                                </Border>
+
+                                <!-- Patient Info -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="5" VerticalOptions="Center">
+                                    <Label
+                                        Text="{Binding FullName}"
+                                        FontAttributes="Bold"
+                                        FontSize="14"
+                                        TextColor="#1E293B" />
+                                    <Label
+                                        Text="{Binding DateNaissance, StringFormat='📅 {0:dd/MM/yyyy}'}"
+                                        FontSize="11"
+                                        TextColor="#94A3B8" />
+                                </VerticalStackLayout>
+
+                                <!-- Âge -->
+                                <Label
+                                    Grid.Column="2"
+                                    Text="{Binding Age, StringFormat='{0} ans'}"
+                                    FontSize="13"
+                                    TextColor="#1E293B"
+                                    VerticalOptions="Center" />
+
+                                <!-- Contact -->
+                                <VerticalStackLayout Grid.Column="3" Spacing="5" VerticalOptions="Center">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="5">
+                                        <Label
+                                            Grid.Column="0"
+                                            FontSize="11"
+                                            Text="📞"
+                                            TextColor="#94A3B8"
+                                            VerticalOptions="Center" />
+                                        <Label
+                                            Grid.Column="1"
+                                            Text="{Binding Phone}"
+                                            FontSize="12"
+                                            TextColor="#64748B"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="5">
+                                        <Label
+                                            Grid.Column="0"
+                                            FontSize="11"
+                                            Text="📧"
+                                            TextColor="#94A3B8"
+                                            VerticalOptions="Center" />
+                                        <Label
+                                            Grid.Column="1"
+                                            Text="{Binding Email}"
+                                            FontSize="12"
+                                            TextColor="#64748B"
+                                            LineBreakMode="TailTruncation"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+                                </VerticalStackLayout>
+
+                                <!-- Notes Médicales -->
+                                <Label
+                                    Grid.Column="4"
+                                    Text="{Binding Notes}"
+                                    FontSize="12"
+                                    TextColor="#64748B"
+                                    LineBreakMode="TailTruncation"
+                                    MaxLines="2"
+                                    VerticalOptions="Center" />
+
+                                <!-- Actions -->
+                                <HorizontalStackLayout Grid.Column="5" Spacing="10" VerticalOptions="Center">
+                                    <Button
+                                        BackgroundColor="#3B82F6"
+                                        BorderWidth="0"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PatientListViewModel}}, Path=EditPatientCommand}"
+                                        CommandParameter="{Binding .}"
+                                        CornerRadius="6"
+                                        FontSize="14"
+                                        HeightRequest="32"
+                                        Padding="12,0"
+                                        Text="✏️"
+                                        TextColor="White"
+                                        WidthRequest="32" />
+
+                                    <Button
+                                        BackgroundColor="#EF4444"
+                                        BorderWidth="0"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PatientListViewModel}}, Path=DeletePatientCommand}"
+                                        CommandParameter="{Binding .}"
+                                        CornerRadius="6"
+                                        FontSize="14"
+                                        HeightRequest="32"
+                                        Padding="12,0"
+                                        Text="🗑️"
+                                        TextColor="White"
+                                        WidthRequest="32" />
+                                </HorizontalStackLayout>
+
+                                <!-- Séparateur -->
+                                <BoxView
+                                    Grid.ColumnSpan="6"
+                                    HeightRequest="1"
+                                    BackgroundColor="#E2E8F0"
+                                    VerticalOptions="End"
+                                    Margin="0,15,0,0" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout
+                            Padding="40"
+                            Spacing="15"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center">
+                            <Label
+                                FontSize="60"
+                                HorizontalOptions="Center"
+                                Text="👥"
+                                TextColor="#475569" />
+                            <Label
+                                FontSize="18"
+                                HorizontalOptions="Center"
+                                Text="Aucun patient enregistré"
+                                TextColor="#64748B" />
                         </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+                </CollectionView>
 
-                    </Frame>
-
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-
-        </CollectionView>
-
-    </VerticalStackLayout>
-
+            </Grid>
+        </Frame>
+    </Grid>
 </ContentPage>

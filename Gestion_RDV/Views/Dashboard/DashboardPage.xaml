@@ -28,20 +28,20 @@
 
                     <!-- Total Patients -->
                     <Frame Grid.Column="0"
-                           BackgroundColor="#1E293B"
+                           BackgroundColor="#F8FAFC"
                            BorderColor="Transparent"
                            CornerRadius="15"
                            HasShadow="False"
                            Padding="20">
                         <VerticalStackLayout Spacing="10">
-                            <Label FontFamily="SegoeMDL2Assets"
-                                   FontSize="30"
-                                   Text="&#xE716;"
-                                   TextColor="#60A5FA"
-                                   HorizontalOptions="Start" />
+                            <Label
+                                FontSize="30"
+                                Text="👥"
+                                TextColor="#60A5FA"
+                                HorizontalOptions="Start" />
                             <Label Text="Total Patients"
                                    FontSize="12"
-                                   TextColor="#94A3B8" />
+                                   TextColor="#64748B" />
                             <Label Text="{Binding TotalPatients}"
                                    FontSize="28"
                                    FontAttributes="Bold"
@@ -51,20 +51,20 @@
 
                     <!-- Total Médecins -->
                     <Frame Grid.Column="1"
-                           BackgroundColor="#1E293B"
+                           BackgroundColor="#F8FAFC"
                            BorderColor="Transparent"
                            CornerRadius="15"
                            HasShadow="False"
                            Padding="20">
                         <VerticalStackLayout Spacing="10">
-                            <Label FontFamily="SegoeMDL2Assets"
-                                   FontSize="30"
-                                   Text="&#xE77B;"
-                                   TextColor="#A78BFA"
-                                   HorizontalOptions="Start" />
+                            <Label
+                                FontSize="30"
+                                Text="🩺"
+                                TextColor="#A78BFA"
+                                HorizontalOptions="Start" />
                             <Label Text="Total Médecins"
                                    FontSize="12"
-                                   TextColor="#94A3B8" />
+                                   TextColor="#64748B" />
                             <Label Text="{Binding TotalMedecins}"
                                    FontSize="28"
                                    FontAttributes="Bold"
@@ -74,20 +74,20 @@
 
                     <!-- RDV Aujourd'hui -->
                     <Frame Grid.Column="2"
-                           BackgroundColor="#1E293B"
+                           BackgroundColor="#F8FAFC"
                            BorderColor="Transparent"
                            CornerRadius="15"
                            HasShadow="False"
                            Padding="20">
                         <VerticalStackLayout Spacing="10">
-                            <Label FontFamily="SegoeMDL2Assets"
-                                   FontSize="30"
-                                   Text="&#xE787;"
-                                   TextColor="#34D399"
-                                   HorizontalOptions="Start" />
+                            <Label
+                                FontSize="30"
+                                Text="📅"
+                                TextColor="#34D399"
+                                HorizontalOptions="Start" />
                             <Label Text="RDV Aujourd'hui"
                                    FontSize="12"
-                                   TextColor="#94A3B8" />
+                                   TextColor="#64748B" />
                             <Label Text="{Binding AppointmentsToday}"
                                    FontSize="28"
                                    FontAttributes="Bold"
@@ -97,20 +97,20 @@
 
                     <!-- Urgences Aujourd'hui -->
                     <Frame Grid.Column="3"
-                           BackgroundColor="#1E293B"
+                           BackgroundColor="#F8FAFC"
                            BorderColor="Transparent"
                            CornerRadius="15"
                            HasShadow="False"
                            Padding="20">
                         <VerticalStackLayout Spacing="10">
-                            <Label FontFamily="SegoeMDL2Assets"
-                                   FontSize="30"
-                                   Text="&#xE7BA;"
-                                   TextColor="#F87171"
-                                   HorizontalOptions="Start" />
+                            <Label
+                                FontSize="30"
+                                Text="🚨"
+                                TextColor="#F87171"
+                                HorizontalOptions="Start" />
                             <Label Text="Urgences Aujourd'hui"
                                    FontSize="12"
-                                   TextColor="#94A3B8" />
+                                   TextColor="#64748B" />
                             <Label Text="{Binding UrgencesToday}"
                                    FontSize="28"
                                    FontAttributes="Bold"
@@ -137,9 +137,9 @@
                                              Padding="15"
                                              HeightRequest="80"
                                              VerticalOptions="Center">
-                            <Label FontFamily="SegoeMDL2Assets"
+                            <Label
                                    FontSize="24"
-                                   Text="&#xE787;"
+                                   Text="📅"
                                    TextColor="White"
                                    HorizontalOptions="Center" />
                             <Label Text="Nouveau Rendez-vous"
@@ -164,9 +164,9 @@
                                              Padding="15"
                                              HeightRequest="80"
                                              VerticalOptions="Center">
-                            <Label FontFamily="SegoeMDL2Assets"
+                            <Label
                                    FontSize="24"
-                                   Text="&#xE716;"
+                                   Text="👤"
                                    TextColor="White"
                                    HorizontalOptions="Center" />
                             <Label Text="Nouveau Patient"
@@ -191,9 +191,9 @@
                                              Padding="15"
                                              HeightRequest="80"
                                              VerticalOptions="Center">
-                            <Label FontFamily="SegoeMDL2Assets"
+                            <Label
                                    FontSize="24"
-                                   Text="&#xE77B;"
+                                   Text="🩺"
                                    TextColor="White"
                                    HorizontalOptions="Center" />
                             <Label Text="Nouveau Médecin"
@@ -208,7 +208,7 @@
                 </Grid>
 
                 <!-- Section Rendez-vous d'Aujourd'hui -->
-                <Frame BackgroundColor="#1E293B"
+                <Frame BackgroundColor="#F8FAFC"
                        BorderColor="Transparent"
                        CornerRadius="15"
                        HasShadow="False"
@@ -218,13 +218,13 @@
                         <Label Text="Rendez-vous d'Aujourd'hui"
                                FontSize="20"
                                FontAttributes="Bold"
-                               TextColor="White" />
+                               TextColor="#1E293B" />
 
                         <CollectionView ItemsSource="{Binding TodayAppointments}">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Frame Margin="0,5"
-                                           BackgroundColor="#0F172A"
+                                           BackgroundColor="#F8FAFC"
                                            BorderColor="{Binding BorderColor}"
                                            CornerRadius="10"
                                            Padding="15">
@@ -242,17 +242,17 @@
                                                 <Label Text="{Binding PatientName}"
                                                        FontSize="16"
                                                        FontAttributes="Bold"
-                                                       TextColor="White" />
+                                                       TextColor="#1E293B" />
 
                                                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="5">
                                                     <Label Grid.Column="0"
                                                            Text="{Binding MedecinName}"
                                                            FontSize="13"
-                                                           TextColor="#94A3B8" />
+                                                           TextColor="#64748B" />
                                                     <Label Grid.Column="1"
                                                            Text="{Binding Type, StringFormat=' • {0}'}"
                                                            FontSize="13"
-                                                           TextColor="#94A3B8" />
+                                                           TextColor="#64748B" />
                                                 </Grid>
 
                                                 <Label Text="{Binding Notes}"
@@ -268,7 +268,7 @@
                                                 <Label Text="{Binding Time}"
                                                        FontSize="16"
                                                        FontAttributes="Bold"
-                                                       TextColor="White"
+                                                       TextColor="#1E293B"
                                                        HorizontalOptions="End" />
                                                 <Frame BackgroundColor="{Binding BorderColor}"
                                                        Padding="8,4"

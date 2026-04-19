@@ -30,6 +30,15 @@
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Fill" />
+
+            <Button
+                x:Name="ShowDbPathBtn"
+                Text="Afficher le chemin de la BDD" 
+                Clicked="OnShowDbPathClicked"
+                BackgroundColor="#2563EB"
+                TextColor="White"
+                HorizontalOptions="Fill"
+                Margin="0,10,0,0" />
         </VerticalStackLayout>
     </ScrollView>
 

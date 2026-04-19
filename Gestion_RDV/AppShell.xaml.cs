@@ -1,6 +1,7 @@
 ﻿using Gestion_RDV.Views.Patients;
+using Gestion_RDV.Views.Patients;
 using Gestion_RDV.Views.Medecins;
-using Gestion_RDV.Views.RendezVous; // Ajoutez cet using pour accéder aux vues de rendez-vous
+using Gestion_RDV.Views.RendezVous;
 
 namespace Gestion_RDV
 {
@@ -10,11 +11,11 @@ namespace Gestion_RDV
         {
             InitializeComponent();
 
-            Routing.RegisterRoute("PatientFormPage", typeof(Gestion_RDV.Views.Patients.PatientFormPage));
-            Routing.RegisterRoute(nameof(PatientFormPage), typeof(PatientFormPage));
+            Routing.RegisterRoute("PatientFormPage", typeof(PatientFormPage));
             Routing.RegisterRoute("MedecinListPage", typeof(MedecinListPage));
             Routing.RegisterRoute("MedecinFormPage", typeof(MedecinFormPage));
             Routing.RegisterRoute("AppointmentFormPage", typeof(AppointmentFormPage));
+            Routing.RegisterRoute("AppointmentListPage", typeof(AppointmentListPage));
         }
     }
 }

@@ -4,29 +4,211 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewModels="clr-namespace:Gestion_RDV.ViewModels.Patients"
-    Title="Nouveau Patient">
+    Title="Patient"
+    BackgroundColor="#0F172A">
 
-    <VerticalStackLayout Padding="20" Spacing="15">
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20">
 
-        <Label Text="Informations du Patient"
-               FontAttributes="Bold"
-               FontSize="22" />
+            <!-- En-tête -->
+            <VerticalStackLayout Spacing="10">                  
+                <Label
+                    x:Name="TitleLabel"
+                    FontAttributes="Bold"
+                    FontSize="28"
+                    Text="Nouveau Patient"  
+                    TextColor="White" />
 
-        <Entry Placeholder="Nom" Text="{Binding LastName}"/>
-        <Entry Placeholder="Prénom" Text="{Binding FirstName}"/>
-        <Entry Placeholder="Email" Text="{Binding Email}"/>
-        <Entry Placeholder="Téléphone" Text="{Binding Phone}"/>
-        <Entry Placeholder="Date de naissance (dd/MM/yyyy)" Text="{Binding BirthDateString}"/>
+                <BoxView
+                    HeightRequest="3"
+                    BackgroundColor="#2563EB"
+                    WidthRequest="60"
+                    HorizontalOptions="Start"
+                    CornerRadius="2" />
+            </VerticalStackLayout>
 
-        <Editor Placeholder="Notes médicales"
-                AutoSize="TextChanges"
-                Text="{Binding Notes}" />
+            <!-- Icône du patient -->
+            <Border
+                BackgroundColor="#2563EB"
+                HeightRequest="100"
+                HorizontalOptions="Center"
+                StrokeThickness="0"
+                WidthRequest="100"
+                Margin="0,10,0,20">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="50" />
+                </Border.StrokeShape>
 
-        <Button Text="Enregistrer"
-                Command="{Binding SaveCommand}"
-                BackgroundColor="#4CAF50"
-                TextColor="White" />
+                <Label
+                    FontSize="50"
+                    HorizontalOptions="Center"
+                    Text="👤"
+                    TextColor="White"
+                    VerticalOptions="Center" />
+            </Border>
 
-    </VerticalStackLayout>
+            <!-- Formulaire -->
+            <Frame
+                BackgroundColor="#1E293B"
+                BorderColor="Transparent"
+                CornerRadius="15"
+                HasShadow="False"
+                Padding="20">
+
+                <VerticalStackLayout Spacing="20">
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        Text="Informations personnelles"
+                        TextColor="White" />
+
+                    <!-- Nom -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label
+                            FontSize="14"
+                            Text="Nom *"
+                            TextColor="#94A3B8" />
+                        <Frame
+                            BackgroundColor="#0F172A"
+                            BorderColor="#334155"
+                            CornerRadius="8"
+                            HasShadow="False"
+                            Padding="0">
+                            <Entry
+                                Placeholder="Ex: Dupont"
+                                PlaceholderColor="#64748B"
+                                Text="{Binding LastName}"
+                                TextColor="White" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Prénom -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label
+                            FontSize="14"
+                            Text="Prénom *"
+                            TextColor="#94A3B8" />
+                        <Frame
+                            BackgroundColor="#0F172A"
+                            BorderColor="#334155"
+                            CornerRadius="8"
+                            HasShadow="False"
+                            Padding="0">
+                            <Entry
+                                Placeholder="Ex: Marie"
+                                PlaceholderColor="#64748B"
+                                Text="{Binding FirstName}"
+                                TextColor="White" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Date de Naissance -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label
+                            FontSize="14"
+                            Text="Date de Naissance *"
+                            TextColor="#94A3B8" />
+                        <Frame
+                            BackgroundColor="#0F172A"
+                            BorderColor="#334155"
+                            CornerRadius="8"
+                            HasShadow="False"
+                            Padding="0">
+                            <DatePicker
+                                Date="{Binding BirthDate}"
+                                Format="dd/MM/yyyy"
+                                TextColor="White" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Téléphone -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label
+                            FontSize="14"
+                            Text="Téléphone *"
+                            TextColor="#94A3B8" />
+                        <Frame
+                            BackgroundColor="#0F172A"
+                            BorderColor="#334155"
+                            CornerRadius="8"
+                            HasShadow="False"
+                            Padding="0">
+                            <Entry
+                                Placeholder="06 12 34 56 78"
+                                PlaceholderColor="#64748B"
+                                Text="{Binding Phone}"
+                                Keyboard="Telephone"
+                                TextColor="White" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Email -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label
+                            FontSize="14"
+                            Text="Email *"
+                            TextColor="#94A3B8" />
+                        <Frame
+                            BackgroundColor="#0F172A"
+                            BorderColor="#334155"
+                            CornerRadius="8"
+                            HasShadow="False"
+                            Padding="0">
+                            <Entry
+                                Placeholder="email@exemple.fr"
+                                PlaceholderColor="#64748B"
+                                Text="{Binding Email}"
+                                Keyboard="Email"
+                                TextColor="White" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Notes Médicales -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label
+                            FontSize="14"
+                            Text="Notes Médicales"
+                            TextColor="#94A3B8" />
+                        <Frame
+                            BackgroundColor="#0F172A"
+                            BorderColor="#334155"
+                            CornerRadius="8"
+                            HasShadow="False"
+                            Padding="0">
+                            <Editor
+                                Placeholder="Allergies, antécédents médicaux..."
+                                PlaceholderColor="#64748B"
+                                Text="{Binding Notes}"
+                                TextColor="White"
+                                HeightRequest="100"
+                                AutoSize="TextChanges" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Boutons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,10,0,0">
+                        <Button
+                            Grid.Column="0"
+                            Text="Annuler"
+                            BackgroundColor="#475569"
+                            TextColor="White"
+                            CornerRadius="8"
+                            Command="{Binding CancelCommand}" />
+
+                        <Button
+                            Grid.Column="1"
+                            Text="Enregistrer"
+                            BackgroundColor="#2563EB"
+                            TextColor="White"
+                            CornerRadius="8"
+                            Command="{Binding SaveCommand}" />
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentPage>
