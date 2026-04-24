@@ -8,6 +8,7 @@ namespace Gestion_RDV.ViewModels.Dashboard
     public class DashboardViewModel : BaseViewModel
     {
         private readonly DatabaseService _db;
+        private readonly AuthenticationService _authService;
 
         private int _totalPatients;
         public int TotalPatients
@@ -43,19 +44,22 @@ namespace Gestion_RDV.ViewModels.Dashboard
         public ICommand NewPatientCommand { get; }
         public ICommand NewMedecinCommand { get; }
         public ICommand RefreshCommand { get; }
+        public ICommand LogoutCommand { get; }
 
-        public DashboardViewModel() : this(null!)
+        public DashboardViewModel() : this(null!, null!)
         {
         }
 
-        public DashboardViewModel(DatabaseService db)
+        public DashboardViewModel(DatabaseService db, AuthenticationService authService)
         {
             _db = db;
-            
+            _authService = authService;
+
             NewAppointmentCommand = new Command(async () => await CreateNewAppointmentAsync());
             NewPatientCommand = new Command(async () => await CreateNewPatientAsync());
             NewMedecinCommand = new Command(async () => await CreateNewMedecinAsync());
             RefreshCommand = new Command(async () => await LoadDataAsync());
+            LogoutCommand = new Command(async () => await LogoutAsync());
         }
 
         public async Task LoadDataAsync()
@@ -116,6 +120,22 @@ namespace Gestion_RDV.ViewModels.Dashboard
         private async Task CreateNewMedecinAsync()
         {
             await Shell.Current.GoToAsync("MedecinFormPage");
+        }
+
+        private async Task LogoutAsync()
+        {
+            bool confirm = await Application.Current.MainPage.DisplayAlert(
+                "Déconnexion",
+                "Êtes-vous sûr de vouloir vous déconnecter ?",
+                "Oui",
+                "Non");
+
+            if (confirm)
+            {
+                _authService?.Logout();
+                Application.Current.MainPage = new NavigationPage(new Views.Authentication.LoginPage(
+                    Application.Current.Handler.MauiContext.Services.GetService<ViewModels.Authentication.LoginViewModel>()));
+            }
         }
     }
 

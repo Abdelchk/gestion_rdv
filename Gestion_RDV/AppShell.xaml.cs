@@ -1,7 +1,7 @@
 ﻿using Gestion_RDV.Views.Patients;
-using Gestion_RDV.Views.Patients;
 using Gestion_RDV.Views.Medecins;
 using Gestion_RDV.Views.RendezVous;
+using Gestion_RDV.Views.Authentication;
 
 namespace Gestion_RDV
 {
@@ -16,6 +16,7 @@ namespace Gestion_RDV
             Routing.RegisterRoute("MedecinFormPage", typeof(MedecinFormPage));
             Routing.RegisterRoute("AppointmentFormPage", typeof(AppointmentFormPage));
             Routing.RegisterRoute("AppointmentListPage", typeof(AppointmentListPage));
+            Routing.RegisterRoute("LoginPage", typeof(LoginPage));
         }
     }
 }

@@ -12,12 +12,62 @@ public class DatabaseService
         if (_db != null)
             return;
 
-        _db = new SQLiteAsyncConnection(
-            Path.Combine(FileSystem.AppDataDirectory, "gestion_rdv.db"));
+        var dbPath = Path.Combine(FileSystem.AppDataDirectory, "gestion_rdv.db");
+        _db = new SQLiteAsyncConnection(dbPath);
+
+        // Afficher le chemin de la base de données dans la console de debug
+        System.Diagnostics.Debug.WriteLine("===========================================");
+        System.Diagnostics.Debug.WriteLine($"📂 DATABASE LOCATION:");
+        System.Diagnostics.Debug.WriteLine($"   {dbPath}");
+        System.Diagnostics.Debug.WriteLine("===========================================");
 
         await _db.CreateTableAsync<Patient>();
         await _db.CreateTableAsync<Medecin>();
         await _db.CreateTableAsync<Appointment>();
+        await _db.CreateTableAsync<User>();
+    }
+
+    /// <summary>
+    /// Obtient le chemin complet de la base de données
+    /// </summary>
+    public string GetDatabasePath()
+    {
+        return Path.Combine(FileSystem.AppDataDirectory, "gestion_rdv.db");
+    }
+
+    // ------------------------------------------------------
+    // USERS (AUTHENTICATION)
+    // ------------------------------------------------------
+    public async Task<User> GetUserByEmailAsync(string email)
+    {
+        await InitAsync();
+        return await _db.Table<User>()
+            .Where(u => u.Email == email)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<User> GetUserByIdAsync(int id)
+    {
+        await InitAsync();
+        return await _db.FindAsync<User>(id);
+    }
+
+    public async Task<int> AddUserAsync(User user)
+    {
+        await InitAsync();
+        return await _db.InsertAsync(user);
+    }
+
+    public async Task UpdateUserAsync(User user)
+    {
+        await InitAsync();
+        await _db.UpdateAsync(user);
+    }
+
+    public async Task<int> GetUserCountAsync()
+    {
+        await InitAsync();
+        return await _db.Table<User>().CountAsync();
     }
 
     // ------------------------------------------------------

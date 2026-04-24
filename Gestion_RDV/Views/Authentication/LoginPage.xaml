@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Gestion_RDV.Views.Authentication.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Gestion_RDV.ViewModels.Authentication"
+    BackgroundColor="#0F172A"
+    Shell.NavBarIsVisible="False">
+
+    <Grid>
+        <!-- Background Pattern -->
+        <BoxView Color="#1E293B" Opacity="0.5" />
+
+        <ScrollView>
+            <VerticalStackLayout
+                Padding="40"
+                Spacing="30"
+                VerticalOptions="Center">
+
+                <!-- Logo et Titre -->
+                <VerticalStackLayout Spacing="15" HorizontalOptions="Center">
+                    <Border
+                        BackgroundColor="#2563EB"
+                        HeightRequest="120"
+                        StrokeThickness="0"
+                        WidthRequest="120">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="60" />
+                        </Border.StrokeShape>
+                        <Label
+                            FontSize="60"
+                            HorizontalOptions="Center"
+                            Text="📅"
+                            TextColor="White"
+                            VerticalOptions="Center" />
+                    </Border>
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="32"
+                        HorizontalOptions="Center"
+                        Text="Cabinet Médical"
+                        TextColor="White" />
+
+                    <Label
+                        FontSize="16"
+                        HorizontalOptions="Center"
+                        Text="Gestion des Rendez-vous"
+                        TextColor="#94A3B8" />
+                </VerticalStackLayout>
+
+                <!-- Formulaire de Connexion -->
+                <Frame
+                    Padding="30"
+                    BackgroundColor="#1E293B"
+                    BorderColor="Transparent"
+                    CornerRadius="15"
+                    HasShadow="False"
+                    MaximumWidthRequest="500">
+
+                    <VerticalStackLayout Spacing="20">
+
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="24"
+                            HorizontalOptions="Center"
+                            Text="Connexion"
+                            TextColor="White" />
+
+                        <!-- Email -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label
+                                FontSize="14"
+                                Text="Email"
+                                TextColor="#94A3B8" />
+                            <Frame
+                                BackgroundColor="#0F172A"
+                                BorderColor="#334155"
+                                CornerRadius="8"
+                                HasShadow="False"
+                                Padding="0">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Padding="15,0">
+                                    <Label
+                                        Grid.Column="0"
+                                        FontSize="18"
+                                        Text="📧"
+                                        VerticalOptions="Center" />
+                                    <Entry
+                                        Grid.Column="1"
+                                        Keyboard="Email"
+                                        Placeholder="votre@email.com"
+                                        PlaceholderColor="#64748B"
+                                        Text="{Binding Email}"
+                                        TextColor="White" />
+                                </Grid>
+                            </Frame>
+                        </VerticalStackLayout>
+
+                        <!-- Mot de passe -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label
+                                FontSize="14"
+                                Text="Mot de passe"
+                                TextColor="#94A3B8" />
+                            <Frame
+                                BackgroundColor="#0F172A"
+                                BorderColor="#334155"
+                                CornerRadius="8"
+                                HasShadow="False"
+                                Padding="0">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Padding="15,0">
+                                    <Label
+                                        Grid.Column="0"
+                                        FontSize="18"
+                                        Text="🔒"
+                                        VerticalOptions="Center" />
+                                    <Entry
+                                        Grid.Column="1"
+                                        IsPassword="True"
+                                        Placeholder="••••••••"
+                                        PlaceholderColor="#64748B"
+                                        Text="{Binding Password}"
+                                        TextColor="White" />
+                                </Grid>
+                            </Frame>
+
+                            <!-- Indicateur de force du mot de passe -->
+                            <Label
+                                FontSize="12"
+                                IsVisible="{Binding PasswordStrengthMessage, Converter={StaticResource StringNotEmptyConverter}}"
+                                Text="{Binding PasswordStrengthMessage}"
+                                TextColor="{Binding PasswordStrengthColor}"
+                                Margin="5,0,0,0" />
+                        </VerticalStackLayout>
+
+                        <!-- Message d'erreur -->
+                        <Label
+                            FontSize="13"
+                            HorizontalOptions="Center"
+                            IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotEmptyConverter}}"
+                            Text="{Binding ErrorMessage}"
+                            TextColor="#EF4444" />
+
+                        <!-- Bouton de Connexion -->
+                        <Button
+                            BackgroundColor="#2563EB"
+                            Command="{Binding LoginCommand}"
+                            CornerRadius="8"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            HeightRequest="50"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                            Text="Se connecter"
+                            TextColor="White" />
+
+                        <!-- Indicateur de chargement -->
+                        <ActivityIndicator
+                            HeightRequest="30"
+                            HorizontalOptions="Center"
+                            IsRunning="{Binding IsBusy}"
+                            IsVisible="{Binding IsBusy}"
+                            Color="#2563EB" />
+
+                        <!-- Séparateur -->
+                        <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10" Margin="0,10">
+                            <BoxView
+                                Grid.Column="0"
+                                BackgroundColor="#334155"
+                                HeightRequest="1"
+                                VerticalOptions="Center" />
+                            <Label
+                                Grid.Column="1"
+                                FontSize="12"
+                                Text="OU"
+                                TextColor="#64748B"
+                                VerticalOptions="Center" />
+                            <BoxView
+                                Grid.Column="2"
+                                BackgroundColor="#334155"
+                                HeightRequest="1"
+                                VerticalOptions="Center" />
+                        </Grid>
+
+                        <!-- Bouton d'Inscription -->
+                        <Button
+                            BackgroundColor="#475569"
+                            Command="{Binding RegisterCommand}"
+                            CornerRadius="8"
+                            FontAttributes="Bold"
+                            FontSize="14"
+                            HeightRequest="50"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                            Text="Créer un compte"
+                            TextColor="White" />
+
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Footer -->
+                <Label
+                    FontSize="12"
+                    HorizontalOptions="Center"
+                    Text="© 2024 Cabinet Médical - Tous droits réservés"
+                    TextColor="#64748B" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+
+</ContentPage>

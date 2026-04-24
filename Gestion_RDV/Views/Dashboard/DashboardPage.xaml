@@ -12,15 +12,26 @@
             <VerticalStackLayout Padding="20" Spacing="20">
 
                 <!-- En-tête -->
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="Tableau de Bord"
-                           FontSize="28"
-                           FontAttributes="Bold"
-                           TextColor="White" />
-                    <Label Text="Vue d'ensemble du cabinet médical"
-                           FontSize="14"
-                           TextColor="#94A3B8" />
-                </VerticalStackLayout>
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="15">
+                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                        <Label Text="Tableau de Bord"
+                               FontSize="28"
+                               FontAttributes="Bold"
+                               TextColor="White" />
+                        <Label Text="Vue d'ensemble du cabinet médical"
+                               FontSize="14"
+                               TextColor="#94A3B8" />
+                    </VerticalStackLayout>
+
+                    <Button Grid.Column="1"
+                            Text="🚪 Déconnexion"
+                            BackgroundColor="#EF4444"
+                            TextColor="White"
+                            CornerRadius="8"
+                            Padding="15,10"
+                            Command="{Binding LogoutCommand}"
+                            VerticalOptions="Center" />
+                </Grid>
 
                 <!-- Statistiques - 4 Cartes -->
                 <Grid ColumnDefinitions="*,*,*,*"
