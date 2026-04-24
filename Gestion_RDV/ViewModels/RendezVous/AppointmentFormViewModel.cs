@@ -37,14 +37,41 @@ public class AppointmentFormViewModel : BaseViewModel
     public Medecin SelectedMedecin
     {
         get => _selectedMedecin;
-        set { _selectedMedecin = value; OnPropertyChanged(); }
+        set 
+        { 
+            _selectedMedecin = value; 
+            OnPropertyChanged();
+            // Recharger les créneaux disponibles quand le médecin change
+            Task.Run(async () => await LoadAvailableTimeSlotsAsync());
+        }
     }
 
     private DateTime _date = DateTime.Today;
     public DateTime Date
     {
         get => _date;
-        set { _date = value; OnPropertyChanged(); }
+        set 
+        { 
+            _date = value; 
+            OnPropertyChanged();
+            // Recharger les créneaux disponibles quand la date change
+            Task.Run(async () => await LoadAvailableTimeSlotsAsync());
+        }
+    }
+
+    private TimeSlot _selectedTimeSlot;
+    public TimeSlot SelectedTimeSlot
+    {
+        get => _selectedTimeSlot;
+        set
+        {
+            _selectedTimeSlot = value;
+            OnPropertyChanged();
+            if (value != null)
+            {
+                Time = value.Time;
+            }
+        }
     }
 
     private TimeSpan _time = DateTime.Now.TimeOfDay;
@@ -77,9 +104,11 @@ public class AppointmentFormViewModel : BaseViewModel
 
     public ObservableCollection<Patient> Patients { get; } = new();
     public ObservableCollection<Medecin> Medecins { get; } = new();
+    public ObservableCollection<TimeSlot> AvailableTimeSlots { get; } = new();
 
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }
+    public ICommand SelectTimeSlotCommand { get; }
 
     public AppointmentFormViewModel() : this(null!)
     {
@@ -90,6 +119,7 @@ public class AppointmentFormViewModel : BaseViewModel
         _db = db;
         SaveCommand = new Command(async () => await SaveAsync(), () => !IsBusy);
         CancelCommand = new Command(async () => await CancelAsync());
+        SelectTimeSlotCommand = new Command<TimeSlot>(SelectTimeSlot);
 
         Task.Run(async () => await LoadDataAsync());
     }
@@ -110,6 +140,95 @@ public class AppointmentFormViewModel : BaseViewModel
 
         foreach (var m in medecins)
             Medecins.Add(m);
+
+        await LoadAvailableTimeSlotsAsync();
+    }
+
+    /// <summary>
+    /// Charge les créneaux horaires disponibles pour le médecin sélectionné et la date sélectionnée
+    /// </summary>
+    private async Task LoadAvailableTimeSlotsAsync()
+    {
+        if (_db == null || SelectedMedecin == null)
+        {
+            AvailableTimeSlots.Clear();
+            return;
+        }
+
+        try
+        {
+            // Générer les créneaux de 8h à 18h par intervalles de 15 minutes
+            var slots = new List<TimeSlot>();
+            var startHour = 8;
+            var endHour = 18;
+            var intervalMinutes = 15;
+
+            var selectedDateTime = Date;
+            var now = DateTime.Now;
+
+            // Récupérer tous les rendez-vous du médecin pour la date sélectionnée
+            var existingAppointments = await _db.GetAppointmentsForDayAsync(selectedDateTime);
+            var medecinAppointments = existingAppointments
+                .Where(a => a.MedecinId == SelectedMedecin.Id)
+                .ToList();
+
+            // Exclure le rendez-vous en cours de modification
+            if (!string.IsNullOrWhiteSpace(AppointmentId))
+            {
+                var currentId = int.Parse(AppointmentId);
+                medecinAppointments = medecinAppointments
+                    .Where(a => a.Id != currentId)
+                    .ToList();
+            }
+
+            for (int hour = startHour; hour < endHour; hour++)
+            {
+                for (int minute = 0; minute < 60; minute += intervalMinutes)
+                {
+                    var timeSlot = new TimeSpan(hour, minute, 0);
+                    var slotDateTime = selectedDateTime.Date + timeSlot;
+
+                    // Vérifier si c'est dans le passé
+                    bool isPast = slotDateTime < now;
+
+                    // Vérifier si le créneau est occupé (avec intervalle de 10 minutes)
+                    bool isOccupied = medecinAppointments.Any(a =>
+                    {
+                        var timeDiff = Math.Abs((a.DateTime - slotDateTime).TotalMinutes);
+                        return timeDiff < 10;
+                    });
+
+                    slots.Add(new TimeSlot
+                    {
+                        Time = timeSlot,
+                        IsAvailable = !isOccupied,
+                        IsPast = isPast
+                    });
+                }
+            }
+
+            // Mettre à jour la collection sur le thread UI
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                AvailableTimeSlots.Clear();
+                foreach (var slot in slots)
+                {
+                    AvailableTimeSlots.Add(slot);
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement des créneaux : {ex.Message}");
+        }
+    }
+
+    private void SelectTimeSlot(TimeSlot slot)
+    {
+        if (slot == null || !slot.IsEnabled)
+            return;
+
+        SelectedTimeSlot = slot;
     }
 
     public async Task LoadAsync()
@@ -153,12 +272,28 @@ public class AppointmentFormViewModel : BaseViewModel
             return;
         }
 
+        // Vérifier qu'un créneau a été sélectionné
+        if (SelectedTimeSlot == null || !SelectedTimeSlot.IsEnabled)
+        {
+            _isSaving = false;
+            await Shell.Current.DisplayAlert("Erreur", "Veuillez sélectionner un créneau horaire disponible", "OK");
+            return;
+        }
+
+        var dateTime = Date.Date + Time;
+
+        // Vérifier que ce n'est pas dans le passé
+        if (dateTime < DateTime.Now)
+        {
+            _isSaving = false;
+            await Shell.Current.DisplayAlert("⚠️ Date invalide", "Vous ne pouvez pas créer un rendez-vous dans le passé.", "OK");
+            return;
+        }
+
         IsBusy = true;
 
         try
         {
-            var dateTime = Date.Date + Time;
-
             // Vérifier les conflits avec intervalle de 10 minutes
             int? currentId = string.IsNullOrWhiteSpace(AppointmentId) ? null : int.Parse(AppointmentId);
             var conflict = await _db.CheckAppointmentConflictAsync(
