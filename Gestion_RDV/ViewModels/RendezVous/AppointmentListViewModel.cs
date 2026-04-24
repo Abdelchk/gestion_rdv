@@ -8,6 +8,8 @@ namespace Gestion_RDV.ViewModels.RendezVous;
 public class AppointmentListViewModel : BaseViewModel
 {
     private readonly DatabaseService _db;
+    private bool _isDeleting = false;
+    private bool _isLoading = false;
 
     private string _searchText = string.Empty;
     public string SearchText
@@ -96,9 +98,10 @@ public class AppointmentListViewModel : BaseViewModel
 
     public async Task LoadAsync()
     {
-        if (_db == null)
+        if (_db == null || _isLoading)
             return;
 
+        _isLoading = true;
         IsBusy = true;
 
         try
@@ -120,6 +123,7 @@ public class AppointmentListViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+            _isLoading = false;
         }
     }
 
@@ -213,20 +217,32 @@ public class AppointmentListViewModel : BaseViewModel
 
     private async Task DeleteAppointmentAsync(AppointmentDisplayItem item)
     {
-        if (item?.Appointment == null)
+        if (item?.Appointment == null || _isDeleting)
             return;
 
-        bool confirm = await Shell.Current.DisplayAlert(
-            "Confirmation",
-            $"Voulez-vous vraiment supprimer le rendez-vous de {item.PatientName} ?",
-            "Oui",
-            "Non");
+        _isDeleting = true;
 
-        if (!confirm)
-            return;
+        try
+        {
+            bool confirm = await Shell.Current.DisplayAlert(
+                "Confirmation",
+                $"Voulez-vous vraiment supprimer le rendez-vous de {item.PatientName} ?",
+                "Oui",
+                "Non");
 
-        await _db.DeleteAppointmentAsync(item.Appointment);
-        await LoadAsync();
+            if (!confirm)
+            {
+                _isDeleting = false;
+                return;
+            }
+
+            await _db.DeleteAppointmentAsync(item.Appointment);
+            await LoadAsync();
+        }
+        finally
+        {
+            _isDeleting = false;
+        }
     }
 }
 

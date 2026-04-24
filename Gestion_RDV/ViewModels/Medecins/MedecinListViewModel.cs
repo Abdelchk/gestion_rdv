@@ -8,6 +8,7 @@ namespace Gestion_RDV.ViewModels.Medecins;
 public class MedecinListViewModel : BaseViewModel
 {
     private readonly DatabaseService _db;
+    private bool _isLoading = false;
 
     private string _searchText;
     public string SearchText
@@ -45,9 +46,10 @@ public class MedecinListViewModel : BaseViewModel
 
     public async Task LoadAsync()
     {
-        if (_db == null)
+        if (_db == null || _isLoading)
             return;
 
+        _isLoading = true;
         IsBusy = true;
 
         try
@@ -66,6 +68,7 @@ public class MedecinListViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+            _isLoading = false;
         }
     }
 

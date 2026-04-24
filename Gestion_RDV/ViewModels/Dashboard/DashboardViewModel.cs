@@ -9,6 +9,7 @@ namespace Gestion_RDV.ViewModels.Dashboard
     {
         private readonly DatabaseService _db;
         private readonly AuthenticationService _authService;
+        private bool _isLoading = false;
 
         private int _totalPatients;
         public int TotalPatients
@@ -64,9 +65,10 @@ namespace Gestion_RDV.ViewModels.Dashboard
 
         public async Task LoadDataAsync()
         {
-            if (_db == null)
+            if (_db == null || _isLoading)
                 return;
 
+            _isLoading = true;
             IsBusy = true;
 
             try
@@ -104,6 +106,7 @@ namespace Gestion_RDV.ViewModels.Dashboard
             finally
             {
                 IsBusy = false;
+                _isLoading = false;
             }
         }
 

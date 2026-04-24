@@ -9,6 +9,7 @@ namespace Gestion_RDV.ViewModels.RendezVous;
 public class AppointmentFormViewModel : BaseViewModel
 {
     private readonly DatabaseService _db;
+    private bool _isSaving = false;
 
     private string _appointmentId;
     public string AppointmentId
@@ -87,9 +88,9 @@ public class AppointmentFormViewModel : BaseViewModel
     public AppointmentFormViewModel(DatabaseService db)
     {
         _db = db;
-        SaveCommand = new Command(async () => await SaveAsync());
+        SaveCommand = new Command(async () => await SaveAsync(), () => !IsBusy);
         CancelCommand = new Command(async () => await CancelAsync());
-        
+
         Task.Run(async () => await LoadDataAsync());
     }
 
@@ -132,18 +133,22 @@ public class AppointmentFormViewModel : BaseViewModel
 
     private async Task SaveAsync()
     {
-        if (_db == null)
+        if (_db == null || IsBusy || _isSaving)
             return;
+
+        _isSaving = true;
 
         // Validation
         if (SelectedPatient == null)
         {
+            _isSaving = false;
             await Shell.Current.DisplayAlert("Erreur", "Veuillez sélectionner un patient", "OK");
             return;
         }
 
         if (SelectedMedecin == null)
         {
+            _isSaving = false;
             await Shell.Current.DisplayAlert("Erreur", "Veuillez sélectionner un médecin", "OK");
             return;
         }
@@ -154,18 +159,25 @@ public class AppointmentFormViewModel : BaseViewModel
         {
             var dateTime = Date.Date + Time;
 
-            // Vérifier les collisions
-            var hasCollision = await _db.HasCollisionAsync(dateTime, SelectedMedecin.Id);
-            if (hasCollision && string.IsNullOrWhiteSpace(AppointmentId))
-            {
-                var result = await Shell.Current.DisplayAlert(
-                    "Conflit de rendez-vous",
-                    $"Le Dr. {SelectedMedecin.FullName} a déjà un rendez-vous à {Time:hh\\:mm}. Voulez-vous continuer?",
-                    "Oui",
-                    "Non");
+            // Vérifier les conflits avec intervalle de 10 minutes
+            int? currentId = string.IsNullOrWhiteSpace(AppointmentId) ? null : int.Parse(AppointmentId);
+            var conflict = await _db.CheckAppointmentConflictAsync(
+                dateTime, 
+                SelectedPatient.Id, 
+                SelectedMedecin.Id, 
+                currentId);
 
-                if (!result)
-                    return;
+            if (conflict.HasConflict)
+            {
+                // Bloquer la création (pas de possibilité de forcer)
+                await Shell.Current.DisplayAlert(
+                    "⚠️ Conflit de rendez-vous",
+                    $"{conflict.Message}\n\nIl doit y avoir au moins 10 minutes d'intervalle entre les rendez-vous.\n\nVeuillez choisir une autre heure.",
+                    "OK");
+
+                IsBusy = false;
+                _isSaving = false;
+                return;
             }
 
             if (string.IsNullOrWhiteSpace(AppointmentId))
@@ -186,7 +198,7 @@ public class AppointmentFormViewModel : BaseViewModel
                 // Mise à jour
                 var appointments = await _db.GetAppointmentsAsync();
                 var rdv = appointments.FirstOrDefault(a => a.Id == int.Parse(AppointmentId));
-                
+
                 if (rdv != null)
                 {
                     rdv.PatientId = SelectedPatient.Id;
@@ -209,6 +221,7 @@ public class AppointmentFormViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+            _isSaving = false;
         }
     }
 

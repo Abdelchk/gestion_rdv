@@ -203,4 +203,79 @@ public class DatabaseService
             )
             .FirstOrDefaultAsync() != null;
     }
+
+    /// <summary>
+    /// Vérifie les conflits de rendez-vous avec un intervalle de 10 minutes
+    /// pour le médecin ET le patient
+    /// </summary>
+    public async Task<AppointmentConflict> CheckAppointmentConflictAsync(
+        DateTime dateTime, 
+        int patientId, 
+        int medecinId, 
+        int? currentAppointmentId = null)
+    {
+        await InitAsync();
+
+        var startTime = dateTime.AddMinutes(-10);
+        var endTime = dateTime.AddMinutes(10);
+
+        // Vérifier les conflits pour le médecin
+        var medecinConflict = await _db.Table<Appointment>()
+            .Where(a =>
+                a.MedecinId == medecinId &&
+                a.DateTime >= startTime &&
+                a.DateTime <= endTime &&
+                (currentAppointmentId == null || a.Id != currentAppointmentId.Value))
+            .FirstOrDefaultAsync();
+
+        if (medecinConflict != null)
+        {
+            var patient = await GetPatientAsync(medecinConflict.PatientId);
+            return new AppointmentConflict
+            {
+                HasConflict = true,
+                ConflictType = ConflictType.Medecin,
+                ConflictingAppointment = medecinConflict,
+                Message = $"Le Dr. {(await GetMedecinAsync(medecinId))?.FullName} a déjà un rendez-vous avec {patient?.FullName} à {medecinConflict.DateTime:HH:mm}"
+            };
+        }
+
+        // Vérifier les conflits pour le patient
+        var patientConflict = await _db.Table<Appointment>()
+            .Where(a =>
+                a.PatientId == patientId &&
+                a.DateTime >= startTime &&
+                a.DateTime <= endTime &&
+                (currentAppointmentId == null || a.Id != currentAppointmentId.Value))
+            .FirstOrDefaultAsync();
+
+        if (patientConflict != null)
+        {
+            var medecin = await GetMedecinAsync(patientConflict.MedecinId);
+            return new AppointmentConflict
+            {
+                HasConflict = true,
+                ConflictType = ConflictType.Patient,
+                ConflictingAppointment = patientConflict,
+                Message = $"{(await GetPatientAsync(patientId))?.FullName} a déjà un rendez-vous avec le Dr. {medecin?.FullName} à {patientConflict.DateTime:HH:mm}"
+            };
+        }
+
+        return new AppointmentConflict { HasConflict = false };
+    }
+}
+
+public enum ConflictType
+{
+    None,
+    Medecin,
+    Patient
+}
+
+public class AppointmentConflict
+{
+    public bool HasConflict { get; set; }
+    public ConflictType ConflictType { get; set; }
+    public Appointment ConflictingAppointment { get; set; }
+    public string Message { get; set; }
 }
