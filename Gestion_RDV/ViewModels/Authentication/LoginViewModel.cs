@@ -205,7 +205,7 @@ public class LoginViewModel : BaseViewModel
                 "OK");
 
             // Rediriger vers le Dashboard
-            await Shell.Current.GoToAsync("//dashboard");
+            Application.Current.MainPage = new AppShell();
         }
         catch (Exception ex)
         {
